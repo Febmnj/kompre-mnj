@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Ujian Komprehensif</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+    }
+    iframe {
+      border: none;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body onload="openFullscreen(); startMonitoring();">
+  <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeKNV5cAPYmd90AlW2Em-A4YO1doJESVjWG_9diIg6hoeEX8A/viewform?embedded=true"></iframe>
+
+  <script>
+    function openFullscreen() {
+      const elem = document.documentElement;
+      if (elem.requestFullscreen) elem.requestFullscreen();
+      else if (elem.mozRequestFullScreen) elem.mozRequestFullScreen(); // Firefox
+      else if (elem.webkitRequestFullscreen) elem.webkitRequestFullscreen(); // Chrome, Safari
+      else if (elem.msRequestFullscreen) elem.msRequestFullscreen(); // IE/Edge
+    }
+
+    let tabCount = 0;
+    let warningShown = false;
+
+    function startMonitoring() {
+      document.addEventListener("visibilitychange", () => {
+        if (document.hidden) {
+          tabCount++;
+          if (tabCount > 1 && !warningShown) {
+            alert("Anda telah keluar dari layar ujian. Sistem akan mencatat pelanggaran.");
+            warningShown = true;
+          }
+        }
+      });
+
+      document.addEventListener("contextmenu", (e) => e.preventDefault()); // Blok klik kanan
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" || (e.ctrlKey && e.key === "t")) {
+          alert("Jangan keluar dari mode layar penuh atau membuka tab lain!");
+          e.preventDefault();
+        }
+      });
+    }
+  </script>
+</body>
+</html>
