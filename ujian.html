@@ -1,0 +1,92 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ujian Komprehensif S1 Manajemen</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      overflow: hidden;
+    }
+    #timer {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      background: #fff;
+      padding: 10px 15px;
+      font-weight: bold;
+      border-radius: 8px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.2);
+      z-index: 1000;
+    }
+    iframe {
+      width: 100vw;
+      height: 100vh;
+      border: none;
+    }
+  </style>
+</head>
+<body onload="startExam();">
+
+<div id="timer">Waktu: <span id="countdown">--:--</span></div>
+
+<iframe id="form" src="https://docs.google.com/forms/d/e/1FAIpQLSd36txobqjJ9YI64J7i1ajwTW_qIQqlzml00ovHpHZgcqLg3g/viewform?embedded=true"></iframe>
+
+<script>
+  let duration = 60 * 60; // 60 menit
+  let timerDisplay = document.getElementById('countdown');
+  let submitted = false;
+
+  function startExam() {
+    launchFullscreen();
+    startTimer();
+    preventCheating();
+  }
+
+  function startTimer() {
+    let timer = duration;
+    setInterval(function () {
+      const minutes = String(parseInt(timer / 60)).padStart(2, '0');
+      const seconds = String(timer % 60).padStart(2, '0');
+      timerDisplay.textContent = `${minutes}:${seconds}`;
+      if (--timer < 0) {
+        alert("Waktu habis! Silakan submit sekarang.");
+      }
+    }, 1000);
+  }
+
+  function launchFullscreen() {
+    let el = document.documentElement;
+    if (el.requestFullscreen) el.requestFullscreen();
+    else if (el.mozRequestFullScreen) el.mozRequestFullScreen();
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    else if (el.msRequestFullscreen) el.msRequestFullscreen();
+  }
+
+  window.onbeforeunload = function () {
+    if (!submitted) {
+      return "Anda belum submit. Keluar dari halaman ini akan membatalkan ujian.";
+    }
+  };
+
+  document.addEventListener('visibilitychange', function () {
+    if (document.hidden) {
+      alert("Anda meninggalkan halaman. Ini dianggap kecurangan!");
+    }
+  });
+
+  document.addEventListener('contextmenu', event => event.preventDefault());
+  document.addEventListener('copy', event => event.preventDefault());
+  document.addEventListener('paste', event => event.preventDefault());
+
+  window.addEventListener('resize', () => {
+    if (window.innerHeight < screen.height - 100) {
+      alert("Tampilan keluar dari fullscreen. Harap kembali ke mode layar penuh.");
+    }
+  });
+
+</script>
+
+</body>
+</html>
